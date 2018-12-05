@@ -11,6 +11,8 @@ const snacks = (state = [], action) => {
     switch( action.type ) {
         case 'ADD_SNACK':
             return [...state, action.payload]
+        case 'SET_SNACKS':
+            return action.payload
         default: return state
     }
 }

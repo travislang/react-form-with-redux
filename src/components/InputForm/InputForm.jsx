@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import axios from 'axios';
 
 
 
@@ -14,14 +14,34 @@ class InputForm extends Component {
             snack: e.target.value
         })
     }
+    getSnacks = () => {
+        axios.get('/snacks')
+        .then( res => {
+            this.props.dispatch({
+                type: 'SET_SNACKS',
+                payload: res.data
+            })
+        }).catch( err => {
+            console.log( 'error in get:', err );
+        })
+    }
+
     handleClick = () => {
-        this.props.dispatch({
-            type: 'ADD_SNACK',
-            payload: this.state.snack
+        console.log(this.state.snack);
+        let snack = {snack: this.state.snack};
+        axios.post('/snacks', snack)
+        .then( res => {
+            this.getSnacks();
+            this.setState({
+                snack: ''
+            })
+        }).catch( err => {
+            console.log( 'error in post:', err );
         })
-        this.setState({
-            snack: ''
-        })
+    }
+
+    componentDidMount() {
+        this.getSnacks();
     }
     render() {
         return (
