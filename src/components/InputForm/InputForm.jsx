@@ -1,9 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
+import './InputForm.css';
 
-
+const styles = theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
+    button: {
+        margin: theme.spacing.unit,
+    },
+    input: {
+        display: 'none',
+    },
+});
 
 class InputForm extends Component {
     state = {
@@ -26,7 +54,8 @@ class InputForm extends Component {
         })
     }
 
-    handleClick = () => {
+    handleClick = (e) => {
+        e.preventDefault();
         console.log(this.state.snack);
         let snack = {snack: this.state.snack};
         axios.post('/snacks', snack)
@@ -44,10 +73,22 @@ class InputForm extends Component {
         this.getSnacks();
     }
     render() {
+        const { classes } = this.props;
+
         return (
-            <div>
-                <input type="text" value={this.state.snack} onChange={this.handleChange} />
-                <button onClick={this.handleClick}>Submit</button>
+            <div className='formContainer'>
+                <form onSubmit={this.handleClick} className={classes.container} noValidate autoComplete="off">
+                    <TextField
+                        id="standard-with-placeholder"
+                        label="Name"
+                        placeholder="required"
+                        className={classes.textField}
+                        value={this.state.snack}
+                        onChange={this.handleChange}
+                        margin="normal"
+                    />
+                    <Button variant="outlined" type='submit' color="primary">Submit</Button>
+                </form>
             </div>
         )
     }
@@ -60,4 +101,8 @@ const mapReduxStateToProps = (reduxStore) => {
     }
 }
 
-export default connect(mapReduxStateToProps)(InputForm);
+InputForm.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapReduxStateToProps)(withStyles(styles)(InputForm));
