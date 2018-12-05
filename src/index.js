@@ -18,7 +18,7 @@ const snacks = (state = [], action) => {
 
 
 const storeInstance = createStore(
-    combineReducers({ songList }),
+    combineReducers({ snacks }),
     applyMiddleware(logger)
 )
 
